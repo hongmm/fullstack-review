@@ -29,6 +29,14 @@ class App extends React.Component {
       }
 
     })
+
+    // $.post('/repos', { test: JSON.stringify(term) })
+    //   .error(function(error) {
+    //     return error;
+    //   })
+    //   .done(function(data) {
+    //     console.log(data);
+    //   })
   }
 
   render () {

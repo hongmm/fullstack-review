@@ -1,12 +1,10 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
-const github = require('../helpers/github.js');
 
 let repoSchema = mongoose.Schema({
   // TODO: your schema here!
   github_id: { type: Number, unique: true, required: true, dropDups: true},
-  //name: String
-  fullname: { type: String, unique: true, required: true, dropDups: true}
+  fullname: { type: String, unique: true, required: true, dropDups: true},
   description: String,
   login: String,
   url: String,
@@ -21,14 +19,18 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (/* TODO */username) => {
+let save = (params) => {
   // TODO: Your code here
   // This function should save a repo or repos to
   // the MongoDB
 
-  var Repo.find({login: username})
-
-
+  Repo.find({login: params.login}, function(result) {
+    if (result) {
+      return result;
+    } else {
+      return Repo.create([params]);
+    }
+  })
 }
 
 module.exports.save = save;

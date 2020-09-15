@@ -1,10 +1,12 @@
 const express = require('express');
 const index = require('../database/index.js');
 const github = require('../helpers/github.js');
+const bodyParser = require('body-parser')
 let app = express();
 
 
 app.use(express.static(__dirname + '/../client/dist'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/repos', function (req, res) {
   // TODO - your code here!
@@ -12,10 +14,16 @@ app.post('/repos', function (req, res) {
   // and get the repo information from the github API, then
   // save the repo information in the database
 
-  //console.log(github.getReposByUsername(username));
+  console.log('server index js')
+  //console.log(req);
+  console.log(JSON.stringify(req.body));
 
-  // call save from database/index.js here
-  // index.save();
+  // req should have in its body the username
+
+  //github.getReposByUsername(username);
+
+  // save info to database
+  //index.save();
 });
 
 app.get('/repos', function (req, res) {

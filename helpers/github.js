@@ -8,8 +8,8 @@ let getReposByUsername = (/* TODO */ username) => {
   // The options object has been provided to help you out,
   // but you'll have to fill in the URL
   let options = {
-    method: 'POST'
-    url: `api.github.com/search/repositories`,
+    method: 'POST',
+    url: 'api.github.com/search/repositories',
     q: username,
     in: 'name',
     headers: {
