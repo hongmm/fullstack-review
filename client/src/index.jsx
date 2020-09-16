@@ -10,7 +10,25 @@ class App extends React.Component {
     this.state = {
       repos: []
     }
+  }
 
+  componentDidMount() {
+    this.getRepos((data) => {
+      this.setState({ repos: data })
+    })
+  }
+
+  getRepos (callback) {
+    $.ajax({
+      url: '/repos',
+      method: 'GET',
+      error: function(error) {
+        return error;
+      },
+      success: function(data) {
+        callback(data);
+      }
+    });
   }
 
   search (term) {
@@ -20,23 +38,17 @@ class App extends React.Component {
     $.ajax({
       url: '/repos',
       method: 'POST',
-      data: term,
+      data: { 'searchTerm': term },
       error: function(error) {
         return error;
       },
       success: function(data) {
         console.log(data);
+        getRepos((data) => {
+          this.setState({ repos: data })
+        });
       }
-
     })
-
-    // $.post('/repos', { test: JSON.stringify(term) })
-    //   .error(function(error) {
-    //     return error;
-    //   })
-    //   .done(function(data) {
-    //     console.log(data);
-    //   })
   }
 
   render () {

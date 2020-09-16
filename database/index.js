@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/fetcher');
+mongoose.connect('mongodb://localhost/fetcher', { useMongoClient: true });
 
 let repoSchema = mongoose.Schema({
   // TODO: your schema here!
@@ -19,18 +19,36 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = (params) => {
+let save = (repo) => {
   // TODO: Your code here
   // This function should save a repo or repos to
   // the MongoDB
-
-  Repo.find({login: params.login}, function(result) {
-    if (result) {
-      return result;
-    } else {
-      return Repo.create([params]);
+  var schemaFormattedRepo = {
+    'github_id': repo.id,
+    'fullname': repo.full_name,
+    'description': repo.description,
+    'login': repo.owner.login,
+    'url': repo.url,
+    'created_at': repo.created_at,
+    'ranking_metadata': {
+      'forks_count': repo.forks_count,
+      'stargazers_count': repo.stargazers_count,
+      'watchers_count': repo.watchers_count,
+      'subscribers_count': repo.subscribers_count
     }
-  })
+  }
+  return Repo.create(schemaFormattedRepo);
+}
+
+let getMostPopularRepos = () => {
+  return Repo.find({}).sort(
+    {
+      'ranking_metadata.forks_count': -1,
+      'ranking_metadata.stargazers_count': -1,
+      'ranking_metadata.watchers_count': -1,
+      'ranking_metadata.subscribers_count': -1
+    }).limit(25);
 }
 
 module.exports.save = save;
+module.exports.getMostPopularRepos = getMostPopularRepos;
